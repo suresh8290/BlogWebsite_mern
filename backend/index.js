@@ -35,7 +35,8 @@ const connectDB = async () => {
 
 app.use(
   cors({
-    origin: "https://blog-website-mern-sand.vercel.app", // Your Vercel frontend
+    
+    origin:["https://blog-website-mern-sand.vercel.app","http://localhost:3001",], // Your Vercel frontend
     credentials: true,
   })
 );
