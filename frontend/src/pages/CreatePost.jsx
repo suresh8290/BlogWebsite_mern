@@ -20,19 +20,40 @@ const CreatePost = () => {
 
     const deleteCategory=(i)=>{
        let updatedCats=[...cats]
-       updatedCats.splice(i)
+       updatedCats.splice(i,1)
        setCats(updatedCats)
     }
 
-    const addCategory=()=>{
-        let updatedCats=[...cats]
-        updatedCats.push(cat)
-        setCat("")
-        setCats(updatedCats)
-    }
+    const addCategory = () => {
+  if (!cat.trim()) return;
+
+  if (cats.includes(cat)) return;
+
+  setCats([...cats, cat]);
+
+  setCat("");
+};
 
     const handleCreate=async (e)=>{
         e.preventDefault()
+        if (!user) {
+  navigate("/login");
+  return;
+}
+         if (!title.trim()) {
+  alert("Please enter a title.");
+  return;
+}
+
+if (!desc.trim()) {
+  alert("Please enter a description.");
+  return;
+}
+
+if (cats.length === 0) {
+  alert("Please select at least one category.");
+  return;
+}
         const post={
           title,
           desc,
@@ -73,56 +94,161 @@ const CreatePost = () => {
 
 
   return (
-    <div>
-        <Navbar/>
-        <div className=' flex justify-center ' >
+  <div className="min-h-screen bg-gray-50">
+    <Navbar />
 
-       
-        <div className='px-6 m-4 border  flex flex-col w-[70%] shadow-xl  md:px-[200px] mt-8'>
-        <h1 className='font-bold md:text-2xl text-2xl mt-3 flex justify-center '>Create a post</h1>
-        <form className='w-full flex flex-col space-y-4 md:space-y-8 mt-4'>
-          <input onChange={(e)=>setTitle(e.target.value)} type="text" placeholder='Enter post title' className='px-4 py-2 outline-none'/>
-          <input onChange={(e)=>setFile(e.target.files[0])} type="file"  className='px-4'/>
-          <div className='flex flex-col'>
-            <div className='flex items-center space-x-4 md:space-x-8'>
-              <select name="" id=""  value={cat} onChange={(e)=>setCat(e.target.value)}>
-                <option value="Artifical Intelligance">Artifical Intelligance</option>
-                <option value="Big Data">Big Data</option>
-                <option value="Block Chain">Block Chain</option>
-                <option value="Bussiness Management">Bussiness Management</option>
-                <option value="Cloud Computing">Cloud Computing</option>
-                <option value="Database">Database</option>
-                <option value="Cyber Security">Cyber Security</option>
-                <option value="DevOps">DevOps</option>
-                <option value="Web Development">Web Development</option>
-                <option value="Mobile Development">Mobile Development</option>
-                <option value="Operating System">Operating System</option>
-                <option value="Enterprise">Enterprise</option>
-              </select>
-                {/* <input className='px-4 py-2 outline-none' placeholder='Enter post category' type="text"/> */}
-                <div onClick={addCategory} className='bg-black text-white px-4 py-2 font-semibold cursor-pointer'>Add</div>
-            </div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-            {/* categories */}
-            <div className='flex px-4 mt-3'>
-            {cats?.map((c,i)=>(
-                <div key={i} className='flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md'>
-                <p>{c}</p>
-                <p onClick={()=>deleteCategory(i)} className='text-white bg-black rounded-full cursor-pointer p-1 text-sm'><ImCross/></p>
-            </div>
-            ))}
-             
-            
-            </div>
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">
+
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Create New Post
+        </h1>
+
+        <form className="space-y-6">
+
+          {/* Title */}
+
+          <div>
+            <label className="block text-gray-700 font-semibold mb-2">
+              Post Title
+            </label>
+
+            <input
+              onChange={(e) => setTitle(e.target.value)}
+              type="text"
+              placeholder="Enter post title"
+              className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-amber-400"
+            />
           </div>
-          <textarea onChange={(e)=>setDesc(e.target.value)} rows={9} cols={30} className='px-4 py-2 outline-none' placeholder='Enter post description'/>
-          <button onClick={handleCreate} className='bg-black  w-full md:w-[20%] mx-auto text-white font-semibold px-4 py-2 md:text-xl text-lg '>Create</button>
+
+          {/* Image */}
+
+          <div>
+            <label className="block text-gray-700 font-semibold mb-2">
+              Featured Image
+            </label>
+
+            <input
+              onChange={(e) => setFile(e.target.files[0])}
+              type="file"
+              className="w-full border rounded-xl p-3 cursor-pointer"
+            />
+          </div>
+
+          {/* Categories */}
+
+          <div>
+
+            <label className="block text-gray-700 font-semibold mb-2">
+              Categories
+            </label>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+
+              <select
+                value={cat}
+                onChange={(e) => setCat(e.target.value)}
+                className="flex-1 border rounded-xl px-4 py-3 outline-none"
+              >
+                <option value="Artificial Intelligence">
+                  Artificial Intelligence
+                </option>
+                <option value="Big Data">Big Data</option>
+                <option value="Blockchain">Blockchain</option>
+                <option value="Business Management">
+                  Business Management
+                </option>
+                <option value="Cloud Computing">
+                  Cloud Computing
+                </option>
+                <option value="Database">Database</option>
+                <option value="Cyber Security">
+                  Cyber Security
+                </option>
+                <option value="DevOps">DevOps</option>
+                <option value="Web Development">
+                  Web Development
+                </option>
+                <option value="Mobile Development">
+                  Mobile Development
+                </option>
+                <option value="Operating System">
+                  Operating System
+                </option>
+                <option value="Enterprise">
+                  Enterprise
+                </option>
+              </select>
+
+              <button
+                type="button"
+                onClick={addCategory}
+                className="bg-black text-white px-6 py-3 rounded-xl hover:bg-gray-800 transition"
+              >
+                Add
+              </button>
+
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+
+              {cats.map((c, i) => (
+                <div
+                  key={i}
+                  className="flex items-center gap-2 bg-amber-100 text-amber-700 rounded-full px-4 py-2"
+                >
+                  <span>{c}</span>
+
+                  <button
+                    type="button"
+                    onClick={() => deleteCategory(i)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <ImCross size={12} />
+                  </button>
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* Description */}
+
+          <div>
+
+            <label className="block text-gray-700 font-semibold mb-2">
+              Description
+            </label>
+
+            <textarea
+              onChange={(e) => setDesc(e.target.value)}
+              rows={8}
+              placeholder="Write your blog here..."
+              className="w-full border rounded-xl px-4 py-3 outline-none resize-none focus:ring-2 focus:ring-amber-400"
+            />
+
+          </div>
+
+          {/* Button */}
+
+          <button
+            onClick={handleCreate}
+            className="w-full md:w-auto bg-black text-white px-8 py-3 rounded-xl font-semibold hover:bg-gray-800 transition"
+          >
+            Publish Post
+          </button>
+
         </form>
-        </div>
-        </div>
-        <Footer/>
+
+      </div>
+
     </div>
-  )
+
+    <Footer />
+  </div>
+);
 }
 
 export default CreatePost

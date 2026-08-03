@@ -1,30 +1,47 @@
-import {IF} from '../url'
+import { IF } from "../url";
 
-const ProfilePosts = ({p}) => {
-  // console.log(p)
+const ProfilePosts = ({ p }) => {
   return (
-    <div className="w-full flex mt-8 space-x-4">
-    {/* left */}
-    <div className="w-[35%] h-[200px] flex justify-center items-center">
-    <img src={IF+p.photo} alt="" className="h-full w-full object-cover"/>
-    </div>
-    {/* right */}
-    <div className="flex flex-col w-[65%]">
-      <h1 className="text-xl font-bold md:mb-2 mb-1 md:text-2xl">
-      {p.title}
-      </h1>
-      <div className="flex mb-2 text-sm font-semibold text-gray-500 items-center justify-between md:mb-4">
-       <p>@{p.username}</p>
-       <div className="flex space-x-2">
-       <p>{new Date(p.updatedAt).toString().slice(0,15)}</p>
-       <p>{new Date(p.updatedAt).toString().slice(16,24)}</p>
-       </div>
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-xl transition overflow-hidden">
+
+      {/* Image */}
+
+      <img
+        src={p.photo ? IF + p.photo : "https://placehold.co/600x400?text=No+Image"}
+        alt={p.title}
+        className="w-full h-52 object-cover"
+      />
+
+      {/* Content */}
+
+      <div className="p-5">
+
+        <h2 className="text-xl font-bold text-gray-800 line-clamp-2">
+          {p.title}
+        </h2>
+
+        <div className="flex flex-col sm:flex-row sm:justify-between text-sm text-gray-500 mt-3 gap-1">
+
+          <span className="font-medium text-amber-700">
+            @{p.username}
+          </span>
+
+          <span>
+            {new Date(p.updatedAt).toLocaleDateString()}
+          </span>
+
+        </div>
+
+        <p className="text-gray-600 mt-4 leading-7">
+          {p.desc.length > 150
+            ? p.desc.slice(0, 150) + "... Read more"
+            : p.desc}
+        </p>
+
       </div>
-      <p className="text-sm md:text-lg">{p.desc.slice(0,200)+" ...Read more"}</p>
-    </div>
 
     </div>
-  )
-}
+  );
+};
 
-export default ProfilePosts
+export default ProfilePosts;

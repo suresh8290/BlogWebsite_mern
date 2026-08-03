@@ -1,45 +1,65 @@
-import axios from "axios"
-import { BiEdit } from "react-icons/bi"
-import { MdDelete } from "react-icons/md"
-import { URL } from "../url"
-import { useContext } from "react"
-import { UserContext } from "../context/UserContext"
+import axios from "axios";
+import { MdDelete } from "react-icons/md";
+import { URL } from "../url";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
 
-const Comment = ({c,post}) => {
+const Comment = ({ c }) => {
+  const { user } = useContext(UserContext);
 
-  const {user}=useContext(UserContext)
-  const deleteComment=async(id)=>{
-    try{
-      await axios.delete(URL+"/api/comments/"+id,{withCredentials:true})
-      window.location.reload(true)
+  const deleteComment = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this comment?"
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await axios.delete(URL + "/api/comments/" + id, {
+        withCredentials: true,
+      });
+
+      window.location.reload();
+    } catch (err) {
+      console.log(err);
     }
-    catch(err){
-      console.log(err)
-    }
-  }
-  
+  };
 
-  // console.log(post.userId)
-  // console.log(user._id)
-  // console.log(post)
-  // console.log(user)
   return (
-    <div className="px-2 py-2 bg-gray-200 w-[90vh] rounded-lg my-2">
-           <div className="flex items-center justify-between">
-            <h3 className="font-bold text-gray-600">@{c.author}</h3>
-            <div className="flex justify-center items-center space-x-4">
-            <p>{new Date(c.updatedAt).toString().slice(3,15)}</p>
-            {user?._id===c?.userId ?
-              <div className="flex items-center justify-center space-x-2">
-                    <p className="cursor-pointer" onClick={()=>deleteComment(c._id)}><MdDelete/></p>
-                </div>:""}
-                
-            </div>
-           </div>
-           <p className="px-4 mt-2">{c.comment}</p>
+    <div className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-md transition duration-300 p-4 mb-4">
 
-           </div>
-  )
-}
+      {/* Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
 
-export default Comment
+        <div>
+          <h3 className="font-semibold text-gray-800">
+            @{c.author}
+          </h3>
+
+          <p className="text-xs text-gray-500 mt-1">
+            {c.updatedAt
+              ? new Date(c.updatedAt).toLocaleDateString()
+              : ""}
+          </p>
+        </div>
+
+        {user?._id === c?.userId && (
+          <button
+            onClick={() => deleteComment(c._id)}
+            title="Delete Comment"
+            className="self-start sm:self-center p-2 rounded-full text-red-600 hover:bg-red-100 transition"
+          >
+            <MdDelete size={20} />
+          </button>
+        )}
+      </div>
+
+      {/* Comment */}
+      <p className="mt-4 text-gray-700 leading-7 break-words whitespace-pre-wrap">
+        {c.comment}
+      </p>
+    </div>
+  );
+};
+
+export default Comment;

@@ -33,8 +33,24 @@ const EditPost = () => {
       }
     }
 
+
+
     const handleUpdate=async (e)=>{
       e.preventDefault()
+      if (!user) {
+  navigate("/login");
+  return;
+}
+
+if (!title.trim()) {
+  alert("Please enter a title.");
+  return;
+}
+
+if (!desc.trim()) {
+  alert("Please enter a description.");
+  return;
+}
       const post={
         title,
         desc,
@@ -43,7 +59,7 @@ const EditPost = () => {
         categories:cats
       }
 
-      if(file){
+      if (file && typeof file !== "string") {
         const data=new FormData()
         const filename=Date.now()+file.name
         data.append("img",filename)
@@ -80,53 +96,151 @@ const EditPost = () => {
 
     const deleteCategory=(i)=>{
        let updatedCats=[...cats]
-       updatedCats.splice(i)
+       updatedCats.splice(i,1)
        setCats(updatedCats)
     }
 
-    const addCategory=()=>{
-        let updatedCats=[...cats]
-        updatedCats.push(cat)
-        setCat("")
-        setCats(updatedCats)
-    }
+    const addCategory = () => {
+  if (!cat.trim()) return;
+
+  if (cats.includes(cat)) return;
+
+  setCats([...cats, cat]);
+
+  setCat("");
+};
   return (
-    <div>
-        <Navbar/>
-        <div className="flex justify-center" >
+  <div className="min-h-screen bg-gray-50">
+    <Navbar />
 
-     
-        <div className=' p-4 \ border w-[70%] flex flex-col justify-centerpx-6 md:px-[200px] mt-8'>
-        <h1 className='font-bold flex justify-center md:text-2xl text-xl '>Update a post</h1>
-        <form className='w-full flex flex-col space-y-4 md:space-y-8 mt-4'>
-          <input onChange={(e)=>setTitle(e.target.value)} value={title} type="text" placeholder='Enter post title' className='px-4 py-2 outline-none'/>
-          <input onChange={(e)=>setFile(e.target.files[0])} type="file"  className='px-4'/>
-          <div className='flex flex-col'>
-            <div className='flex items-center space-x-4 md:space-x-8'>
-                <input value={cat} onChange={(e)=>setCat(e.target.value)} className='px-4 py-2 outline-none' placeholder='Enter post category' type="text"/>
-                <div onClick={addCategory} className='bg-black text-white px-4 py-2 font-semibold cursor-pointer'>Add</div>
-            </div>
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-            {/* categories */}
-            <div className='flex px-4 mt-3'>
-            {cats?.map((c,i)=>(
-                <div key={i} className='flex justify-center items-center space-x-2 mr-4 bg-gray-200 px-2 py-1 rounded-md'>
-                <p>{c}</p>
-                <p onClick={()=>deleteCategory(i)} className='text-white bg-black rounded-full cursor-pointer p-1 text-sm'><ImCross/></p>
-            </div>
-            ))}
-            
-            
-            </div>
+      <div className="bg-white rounded-2xl shadow-lg border border-gray-200 p-6 md:p-8">
+
+        <h1 className="text-3xl font-bold text-center text-gray-800 mb-8">
+          Update Post
+        </h1>
+
+        <form className="space-y-6">
+
+          {/* Title */}
+
+          <div>
+            <label className="block font-semibold text-gray-700 mb-2">
+              Post Title
+            </label>
+
+            <input
+              value={title}
+              onChange={(e)=>setTitle(e.target.value)}
+              type="text"
+              placeholder="Enter post title"
+              className="w-full border rounded-xl px-4 py-3 outline-none focus:ring-2 focus:ring-amber-400"
+            />
           </div>
-          <textarea onChange={(e)=>setDesc(e.target.value)} value={desc} rows={9} cols={30} className='px-4 py-2 outline-none' placeholder='Enter post description'/>
-          <button onClick={handleUpdate} className='bg-black w-full md:w-[20%] mx-auto text-white font-semibold px-4 py-2 md:text-xl  text-lg'>Update</button>
+
+          {/* Image */}
+
+          <div>
+
+            <label className="block font-semibold text-gray-700 mb-2">
+              Change Featured Image
+            </label>
+
+            <input
+              onChange={(e)=>setFile(e.target.files[0])}
+              type="file"
+              className="w-full border rounded-xl p-3 cursor-pointer"
+            />
+
+          </div>
+
+          {/* Category */}
+
+          <div>
+
+            <label className="block font-semibold text-gray-700 mb-2">
+              Categories
+            </label>
+
+            <div className="flex flex-col sm:flex-row gap-3">
+
+              <input
+                value={cat}
+                onChange={(e)=>setCat(e.target.value)}
+                placeholder="Add category"
+                className="flex-1 border rounded-xl px-4 py-3 outline-none"
+              />
+
+              <button
+                type="button"
+                onClick={addCategory}
+                className="bg-black text-white rounded-xl px-6 py-3 hover:bg-gray-800 transition"
+              >
+                Add
+              </button>
+
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-4">
+
+              {cats.map((c,i)=>(
+                <div
+                  key={i}
+                  className="flex items-center gap-2 bg-amber-100 text-amber-700 rounded-full px-4 py-2"
+                >
+
+                  <span>{c}</span>
+
+                  <button
+                    type="button"
+                    onClick={()=>deleteCategory(i)}
+                    className="text-red-600 hover:text-red-800"
+                  >
+                    <ImCross size={12}/>
+                  </button>
+
+                </div>
+              ))}
+
+            </div>
+
+          </div>
+
+          {/* Description */}
+
+          <div>
+
+            <label className="block font-semibold text-gray-700 mb-2">
+              Description
+            </label>
+
+            <textarea
+              value={desc}
+              onChange={(e)=>setDesc(e.target.value)}
+              rows={8}
+              placeholder="Update your blog..."
+              className="w-full border rounded-xl px-4 py-3 outline-none resize-none focus:ring-2 focus:ring-amber-400"
+            />
+
+          </div>
+
+          <button
+            onClick={handleUpdate}
+            className="w-full md:w-auto bg-black text-white px-8 py-3 rounded-xl font-semibold hover:bg-gray-800 transition"
+          >
+            Update Post
+          </button>
+
         </form>
-        </div>
-        </div>
-        <Footer/>
+
+      </div>
+
     </div>
-  )
+
+    <Footer />
+  </div>
+);
 }
 
 export default EditPost

@@ -1,38 +1,95 @@
-import { useContext } from "react"
-import { UserContext } from "../context/UserContext"
-import axios from "axios"
-import { URL } from "../url"
-import { Link, useNavigate } from "react-router-dom"
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext";
+import axios from "axios";
+import { URL } from "../url";
+import { Link, useNavigate } from "react-router-dom";
 
+import {
+  FiUser,
+  FiEdit,
+  FiBookOpen,
+  FiLogIn,
+  FiUserPlus,
+  FiLogOut,
+} from "react-icons/fi";
 
 const Menu = () => {
-const {user}=useContext(UserContext)
-const {setUser}=useContext(UserContext)
-const navigate=useNavigate()
+  const { user, setUser } = useContext(UserContext);
+  const navigate = useNavigate();
 
-const handleLogout=async()=>{
-  try{
-    const res=await axios.get(URL+"/api/auth/logout",{withCredentials:true})
-    // console.log(res)
-    setUser(null)
-    navigate("/login")
+  const handleLogout = async () => {
+    try {
+      await axios.get(URL + "/api/auth/logout", {
+        withCredentials: true,
+      });
 
-  }
-  catch(err){
-    console.log(err)
-  }
-}
+      setUser(null);
+      navigate("/login");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   return (
-    <div className="bg-black w-[200px] z-10 flex flex-col items-start absolute top-12 right-6 md:right-32 rounded-md p-4 space-y-4">
-    {!user && <h3 className="text-white text-sm hover:text-gray-500 cursor-pointer"><Link to="/login">Login</Link></h3>}
-    {!user &&<h3 className="text-white text-sm hover:text-gray-500 cursor-pointer"><Link to="/register">Register</Link></h3>}
-    {user && <h3 className="text-white text-sm hover:text-gray-500 cursor-pointer"><Link to={"/profile/"+user._id}>Profile</Link></h3>}
-    {user &&<h3 className="text-white text-sm hover:text-gray-500 cursor-pointer"><Link to="/write">Write</Link></h3>}
-    {user && <h3 className="text-white text-sm hover:text-gray-500 cursor-pointer"><Link to={"/myblogs/"+user._id}>My blogs</Link></h3>}
-    {user &&<h3 onClick={handleLogout} className="text-white text-sm hover:text-gray-500 cursor-pointer">Logout</h3>}
+    <div className="absolute top-14 right-3 md:right-10 w-56 bg-white border border-gray-200 rounded-2xl shadow-2xl z-50 overflow-hidden">
 
+      {!user && (
+        <>
+          <Link
+            to="/login"
+            className="flex items-center gap-3 px-5 py-4 hover:bg-amber-50 transition"
+          >
+            <FiLogIn className="text-lg text-amber-700" />
+            <span>Login</span>
+          </Link>
+
+          <Link
+            to="/register"
+            className="flex items-center gap-3 px-5 py-4 hover:bg-amber-50 transition"
+          >
+            <FiUserPlus className="text-lg text-amber-700" />
+            <span>Register</span>
+          </Link>
+        </>
+      )}
+
+      {user && (
+        <>
+          <Link
+            to={`/profile/${user._id}`}
+            className="flex items-center gap-3 px-5 py-4 hover:bg-amber-50 transition"
+          >
+            <FiUser className="text-lg text-amber-700" />
+            <span>Profile</span>
+          </Link>
+
+          <Link
+            to="/write"
+            className="flex items-center gap-3 px-5 py-4 hover:bg-amber-50 transition"
+          >
+            <FiEdit className="text-lg text-amber-700" />
+            <span>Write Blog</span>
+          </Link>
+
+          <Link
+            to={`/myblogs/${user._id}`}
+            className="flex items-center gap-3 px-5 py-4 hover:bg-amber-50 transition"
+          >
+            <FiBookOpen className="text-lg text-amber-700" />
+            <span>My Blogs</span>
+          </Link>
+
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-5 py-4 text-left text-red-600 hover:bg-red-50 transition"
+          >
+            <FiLogOut className="text-lg" />
+            <span>Logout</span>
+          </button>
+        </>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Menu
+export default Menu;

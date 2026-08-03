@@ -1,31 +1,70 @@
-
 const Footer = () => {
-    return (
-      <>
-  <div className="mt-8 w-full bg-black px-8 md:px-[300px] flex gap-20 space-y-6 md:space-y-0 items-start md:justify-between text-sm md:text-md py-8 ">
-         <div className="flex flex-col text-white">
-           <p>Featured Blogs</p>
-           <p>Most viewed</p>
-           <p>Readers Choice</p>
-         </div>
-  
-         <div className="flex flex-col text-white">
-           <p>Forum</p>
-           <p>Support</p>
-           <p>Recent Posts</p>
-         </div>
-  
-         <div className="flex flex-col text-white">
-           <p>Privacy Policy</p>
-           <p>About Us</p>
-           <p>Terms & Conditions</p>
-           <p>Terms of Service</p>
-         </div>
+  return (
+    <footer className="mt-10 bg-black text-gray-300">
+
+      <div className="max-w-7xl mx-auto px-6 md:px-12 lg:px-20 py-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+
+        {/* Brand */}
+        <div>
+          <h2 className="text-2xl font-bold text-amber-400">
+            Sumitra Mehandi Artworks
+          </h2>
+          <p className="mt-3 text-sm text-gray-400 leading-6">
+            Beautiful Mehndi Designs, Bridal Artworks, Creative Patterns &
+            Inspiration.
+          </p>
+        </div>
+
+        {/* Explore */}
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-3">
+            Explore
+          </h3>
+
+          <div className="space-y-2 text-sm">
+            <p>Featured Blogs</p>
+            <p>Latest Posts</p>
+            <p>Most Viewed</p>
+            <p>Reader's Choice</p>
+          </div>
+        </div>
+
+        {/* Information */}
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-3">
+            Information
+          </h3>
+
+          <div className="space-y-2 text-sm">
+            <p>About Us</p>
+            <p>Privacy Policy</p>
+            <p>Terms & Conditions</p>
+            <p>Support</p>
+          </div>
+        </div>
+
+        {/* Contact */}
+        <div>
+          <h3 className="text-lg font-semibold text-white mb-3">
+            Contact
+          </h3>
+
+          <div className="space-y-2 text-sm">
+            <p>📞 9785827828</p>
+            <p>📍 Gayatri Nagar, Bhilwara</p>
+            <p>📷 Instagram</p>
+            <p className="text-amber-400">@sumi_mehndi_artworks</p>
+          </div>
+        </div>
+
       </div>
-      <p className="py-2 pb-6 text-center text-white bg-black text-sm">All rights reserved @Blog Market 2023</p>
-      </>
-      
-    )
-  }
-  
-  export default Footer
+
+      <div className="border-t border-gray-800 py-5 text-center text-sm text-gray-400">
+        © 2026 <span className="text-amber-400 font-semibold">Sumitra Mehandi Artworks</span>. All Rights Reserved.
+      </div>
+
+    </footer>
+  );
+};
+
+export default Footer;
