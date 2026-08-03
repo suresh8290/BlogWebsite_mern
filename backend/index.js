@@ -1,89 +1,94 @@
-const express=require('express')
-const app=express()
-const mongoose=require('mongoose')
-const dotenv=require('dotenv')
-const cors=require('cors')
-const multer=require('multer')
-const path=require("path")
-const cookieParser=require('cookie-parser')
-const authRoute=require('./routes/auth')
-const userRoute=require('./routes/users')
-const postRoute=require('./routes/posts')
-const commentRoute=require('./routes/comments')
-app.use(cors())
-const corsOptions = {
-    origin: '*',
+const express = require("express");
+const app = express();
+
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const cors = require("cors");
+const multer = require("multer");
+const path = require("path");
+const cookieParser = require("cookie-parser");
+
+// Load environment variables
+dotenv.config();
+
+// Routes
+const authRoute = require("./routes/auth");
+const userRoute = require("./routes/users");
+const postRoute = require("./routes/posts");
+const commentRoute = require("./routes/comments");
+
+// ======================
+// Database Connection
+// ======================
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URL);
+    console.log("✅ Database connected successfully!");
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// ======================
+// Middlewares
+// ======================
+
+app.use(
+  cors({
+    origin: "https://blog-website-mern-sand.vercel.app", // Your Vercel frontend
     credentials: true,
-  };
-  
-  app.use(cors(corsOptions));
-//database
-const connectDB=async()=>{
-    try{
-        await mongoose.connect(process.env.MONGO_URL)
-        console.log("database is connected successfully!")
+  })
+);
 
-    }
-    catch(err){
-        console.log(err)
-    }
-}
+app.use(express.json());
+app.use(cookieParser());
 
+// Serve uploaded images
+app.use("/images", express.static(path.join(__dirname, "images")));
 
+// ======================
+// Routes
+// ======================
 
+app.use("/api/auth", authRoute);
+app.use("/api/users", userRoute);
+app.use("/api/posts", postRoute);
+app.use("/api/comments", commentRoute);
 
-//middlewares
-dotenv.config()
-app.use(express.json())
-app.use("/images",express.static(path.join(__dirname,"/images")))
-console.log(cors())
-// const corsOptions = {
-//     origin: '*',
-//     methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
-//     credentials: true,
-//     optionsSuccessStatus: 204,
-//   };
-  
-//   app.use(cors(corsOptions));
-// app.use(cors({origin:"http://localhost:3000",credentials:true}))
-// app.options("/api/users", cors({
-//     methods: ["GET", "PUT", "POST", "DELETE"], // Add other allowed methods as needed
-//   }));
-// app.options("/api/auth", cors({
-//     methods: ["GET", "PUT", "POST", "DELETE"], // Add other allowed methods as needed
-//   }));
-// app.options("/api/posts", cors({
-//     methods: ["GET", "PUT", "POST", "DELETE"], // Add other allowed methods as needed
-//   }));
-// app.options("/api/comments", cors({
-//     methods: ["GET", "PUT", "POST", "DELETE"], // Add other allowed methods as needed
-//   }));
-app.use(cookieParser())
-app.use("/api/auth",authRoute)
-app.use("/api/users",userRoute)
-app.use("/api/posts",postRoute)
-app.use("/api/comments",commentRoute)
+// ======================
+// Image Upload
+// ======================
 
-//image upload
-const storage=multer.diskStorage({
-    destination:(req,file,fn)=>{
-        fn(null,"images")
-    },
-    filename:(req,file,fn)=>{
-        fn(null,req.body.img)
-        // fn(null,"image1.jpg")
-    }
-})
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "images");
+  },
+  filename: (req, file, cb) => {
+    cb(null, req.body.img);
+  },
+});
 
-const upload=multer({storage:storage})
-app.post("/api/upload",upload.single("file"),(req,res)=>{
-    // console.log(req.body)
-    res.status(200).json("Image has been uploaded successfully!")
-})
+const upload = multer({ storage });
+
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  res.status(200).json("Image has been uploaded successfully!");
+});
+
+// ======================
+// Test Route
+// ======================
+
+app.get("/", (req, res) => {
+  res.send("🚀 Blog Backend is Running");
+});
+
+// ======================
+// Server
+// ======================
 
 const PORT = process.env.PORT || 8000;
 
-app.listen(PORT,()=>{
-    connectDB()
-    console.log("app is running on port "+PORT)
-})
+app.listen(PORT, async () => {
+  await connectDB();
+  console.log(`🚀 Server running on port ${PORT}`);
+});
