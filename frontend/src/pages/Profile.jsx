@@ -29,39 +29,32 @@ const Profile = () => {
   };
 
   const handleUserUpdate = async () => {
+  setUpdated(false);
+
+  try {
+    const res = await axios.put(
+      URL + "/api/users/" + user._id,
+      {
+        username,
+        email,
+        password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
+
+    console.log(res.data);
+    setUpdated(true);
+  } catch (err) {
+    console.log(err);
     setUpdated(false);
-
-    try {
-      // const response = await axios.put(
-      //   `http://localhost:8000/api/users/${user._id}`,
-      //   JSON.stringify({ username, email, password }), // Send the data as an object
-      //   {
-      //     headers: {
-      //       'Content-Type': 'application/json', // Set the Content-Type header to application/json
-      //     },
-      //     withCredentials: true
-      //   }
-      // );
-      const response=await fetch(`/api/users/${user._id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      console.log(response.data);
-      setUpdated(true);
-    } catch (error) {
-      console.log(error);
-      setUpdated(false);
-    }
-  };
+  }
+};
 
   const handleUserDelete = async () => {
     try {
-      const res = await axios.delete("/api/users/" + user._id, {
+      const res = await axios.delete(URL + "/api/users/" + user._id, {
         withCredentials: true,
       });
       setUser(null);
