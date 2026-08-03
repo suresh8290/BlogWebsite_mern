@@ -81,8 +81,9 @@ app.post("/api/upload",upload.single("file"),(req,res)=>{
     res.status(200).json("Image has been uploaded successfully!")
 })
 
+const PORT = process.env.PORT || 8000;
 
-app.listen(process.env.PORT,()=>{
+app.listen(PORT,()=>{
     connectDB()
-    console.log("app is running on port "+process.env.PORT)
+    console.log("app is running on port "+PORT)
 })
